@@ -2,10 +2,10 @@ const mongoose = require('mongoose');
 
 const customerSchema = new mongoose.Schema({
     customerType: { type: String, enum: ['individual', 'company'], default: 'individual' },
-    name: { type: String, required: true },
+    customerName: { type: String, required: true }, 
     companyName: { type: String },
     taxId: { type: String },
-    phone: { type: String, required: true },
+    customerPhone: { type: String, required: true }, 
     email: { type: String },
     address: { type: String },
     notes: { type: String },

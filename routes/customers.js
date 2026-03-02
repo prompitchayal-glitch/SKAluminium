@@ -2,18 +2,21 @@ const express = require('express');
 const router = express.Router();
 const Customer = require('../models/Customer');
 
-// Get all customers
+// 1. ดึงข้อมูลลูกค้าทั้งหมด (ถูกต้องแล้ว)
 router.get('/', async (req, res) => {
     try {
         const { type, search } = req.query;
         let query = {};
         
-        if (type) query.customerType = type;
+        if (type && type !== 'all') {
+            query.customerType = type;
+        }
+
         if (search) {
             query.$or = [
-                { name: { $regex: search, $options: 'i' } },
+                { customerName: { $regex: search, $options: 'i' } },
                 { companyName: { $regex: search, $options: 'i' } },
-                { phone: { $regex: search, $options: 'i' } }
+                { customerPhone: { $regex: search, $options: 'i' } }
             ];
         }
         
@@ -24,7 +27,7 @@ router.get('/', async (req, res) => {
     }
 });
 
-// Get single customer
+// 2. ดึงข้อมูลลูกค้ารายบุคคล
 router.get('/:id', async (req, res) => {
     try {
         const customer = await Customer.findById(req.params.id);
@@ -35,18 +38,20 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-// Create customer
+// 3. บันทึกข้อมูลลูกค้าใหม่ (แก้ไขจุดที่ผิดให้แล้ว)
 router.post('/', async (req, res) => {
     try {
+        // สร้างข้อมูลใหม่จากค่าที่ส่งมาจากหน้าบ้าน (req.body)
         const customer = new Customer(req.body);
         await customer.save();
         res.status(201).json(customer);
     } catch (error) {
+        // ถ้าชื่อฟิลด์ไม่ตรงกับ Model จะติด Error ตรงนี้
         res.status(400).json({ message: error.message });
     }
 });
 
-// Update customer
+// 4. แก้ไขข้อมูลลูกค้า
 router.put('/:id', async (req, res) => {
     try {
         const customer = await Customer.findByIdAndUpdate(req.params.id, req.body, { new: true });
@@ -56,7 +61,7 @@ router.put('/:id', async (req, res) => {
     }
 });
 
-// Delete customer
+// 5. ลบข้อมูลลูกค้า
 router.delete('/:id', async (req, res) => {
     try {
         await Customer.findByIdAndDelete(req.params.id);
@@ -66,12 +71,13 @@ router.delete('/:id', async (req, res) => {
     }
 });
 
-// Get customer stats
+// 6. ข้อมูลสรุปสถิติ (ถูกต้องแล้ว)
 router.get('/stats/summary', async (req, res) => {
     try {
         const total = await Customer.countDocuments();
         const individual = await Customer.countDocuments({ customerType: 'individual' });
         const company = await Customer.countDocuments({ customerType: 'company' });
+        
         const totalSpent = await Customer.aggregate([
             { $group: { _id: null, total: { $sum: '$totalSpent' } } }
         ]);

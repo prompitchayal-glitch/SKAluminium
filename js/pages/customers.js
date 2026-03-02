@@ -23,44 +23,44 @@ const CustomersPage = {
     },
 
     // Render customers table
-    renderCustomersTable(customers) {
-        const tbody = document.getElementById('customersList');
-        if (!tbody) return;
+ renderCustomersTable(customers) {
+    const tbody = document.getElementById('customersList');
+    if (!tbody) return;
 
-        if (customers.length === 0) {
-            tbody.innerHTML = `
-                <tr>
-                    <td colspan="7" style="text-align: center; padding: 40px; color: #666;">
-                        ยังไม่มีข้อมูลลูกค้า คลิก "+ เพิ่มลูกค้าใหม่" เพื่อเพิ่มลูกค้า
-                    </td>
-                </tr>
-            `;
-            return;
-        }
+    if (customers.length === 0) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="7" style="text-align: center; padding: 40px; color: #666;">
+                    ยังไม่มีข้อมูลลูกค้า คลิก "+ เพิ่มลูกค้าใหม่" เพื่อเพิ่มลูกค้า
+                </td>
+            </tr>
+        `;
+        return;
+    }
 
-        tbody.innerHTML = customers.map(customer => {
-            const typeLabel = customer.customerType === 'company' ? 'นิติบุคคล' : 'บุคคลทั่วไป';
-            const typeBadge = customer.customerType === 'company' ? 'badge-company' : 'badge-individual';
+    tbody.innerHTML = customers.map(customer => {
+        const typeLabel = customer.customerType === 'company' ? 'นิติบุคคล' : 'บุคคลทั่วไป';
+        const typeBadge = customer.customerType === 'company' ? 'badge-company' : 'badge-individual';
 
-            return `
-                <tr data-id="${customer._id}">
-                    <td>${customer._id.slice(-6).toUpperCase()}</td>
-                    <td>${customer.name}</td>
-                    <td><span class="badge ${typeBadge}">${typeLabel}</span></td>
-                    <td>${customer.phone || '-'}</td>
-                    <td>${customer.email || '-'}</td>
-                    <td>${customer.totalProjects || 0}</td>
-                    <td>
-                        <button class="btn-icon edit-btn" title="แก้ไข" data-id="${customer._id}">✏️</button>
-                        <button class="btn-icon delete-btn" title="ลบ" data-id="${customer._id}">🗑️</button>
-                        <button class="btn-icon view-btn" title="ดูรายละเอียด" data-id="${customer._id}">👁️</button>
-                    </td>
-                </tr>
-            `;
-        }).join('');
+        return `
+            <tr data-id="${customer._id}">
+                <td>${customer._id.slice(-6).toUpperCase()}</td>
+                <td>${customer.customerName || '-'}</td> 
+                <td><span class="badge ${typeBadge}">${typeLabel}</span></td>
+                <td>${customer.customerPhone || '-'}</td> 
+                <td>${customer.email || '-'}</td>
+                <td>${customer.totalProjects || 0}</td>
+                <td>
+                    <button class="btn-icon edit-btn" title="แก้ไข" data-id="${customer._id}">✏️</button>
+                    <button class="btn-icon delete-btn" title="ลบ" data-id="${customer._id}">🗑️</button>
+                    <button class="btn-icon view-btn" title="ดูรายละเอียด" data-id="${customer._id}">👁️</button>
+                </td>
+            </tr>
+        `;
+    }).join('');
 
-        this.attachRowEventListeners();
-    },
+    this.attachRowEventListeners();
+},
 
     // Attach event listeners to table row buttons
     attachRowEventListeners() {
@@ -132,17 +132,19 @@ const CustomersPage = {
     },
 
     // Save customer (create or update)
-    async saveCustomer() {
-        const formData = {
-            customerType: document.getElementById('customerType')?.value || 'individual',
-            name: document.getElementById('customerName')?.value,
-            companyName: document.getElementById('companyName')?.value,
-            taxId: document.getElementById('taxId')?.value,
-            phone: document.getElementById('customerPhone')?.value,
-            email: document.getElementById('customerEmail')?.value,
-            address: document.getElementById('customerAddress')?.value,
-            notes: document.getElementById('customerNotes')?.value
-        };
+async saveCustomer() {
+    const formData = {
+        customerType: document.getElementById('customerType')?.value || 'individual',
+        // เปลี่ยนชื่อ Key ฝั่งซ้ายมือให้ตรงกับ Schema
+        customerName: document.getElementById('customerName')?.value,   
+        customerPhone: document.getElementById('customerPhone')?.value, 
+        
+        companyName: document.getElementById('companyName')?.value,
+        taxId: document.getElementById('taxId')?.value,
+        email: document.getElementById('customerEmail')?.value,
+        address: document.getElementById('customerAddress')?.value,
+        notes: document.getElementById('customerNotes')?.value
+    };
 
         try {
             if (this.currentCustomerId) {
