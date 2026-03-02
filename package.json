@@ -1,0 +1,33 @@
+{
+  "name": "skaluminuim",
+  "version": "1.0.0",
+  "description": "![SK Aluminium](https://img.shields.io/badge/Version-1.0.0-blue)\r ![Status](https://img.shields.io/badge/Status-Development-yellow)",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "seed": "node seed.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/natthapongcha-eng/SKaluminuim.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/natthapongcha-eng/SKaluminuim/issues"
+  },
+  "homepage": "https://github.com/natthapongcha-eng/SKaluminuim#readme",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "mongoose": "^9.2.1",
+    "multer": "^2.0.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.11"
+  }
+}

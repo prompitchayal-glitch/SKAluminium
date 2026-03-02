@@ -1,0 +1,29 @@
+const mongoose = require('mongoose');
+
+const quotationItemSchema = new mongoose.Schema({
+    name: { type: String, required: true },
+    quantity: { type: Number, required: true },
+    unit: { type: String, required: true },
+    pricePerUnit: { type: Number, required: true },
+    total: { type: Number, required: true }
+});
+
+const quotationSchema = new mongoose.Schema({
+    quotationNumber: { type: String, required: true, unique: true },
+    customerId: { type: mongoose.Schema.Types.ObjectId, ref: 'Customer' },
+    customerName: { type: String, required: true },
+    customerAddress: { type: String },
+    customerPhone: { type: String },
+    items: [quotationItemSchema],
+    subtotal: { type: Number, default: 0 },
+    discount: { type: Number, default: 0 },
+    vat: { type: Number, default: 0 },
+    totalAmount: { type: Number, default: 0 },
+    status: { type: String, enum: ['draft', 'sent', 'approved', 'rejected'], default: 'draft' },
+    notes: { type: String },
+    validUntil: { type: Date },
+    createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    createdAt: { type: Date, default: Date.now }
+});
+
+module.exports = mongoose.model('Quotation', quotationSchema, 'quotations');
