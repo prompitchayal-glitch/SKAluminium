@@ -271,10 +271,8 @@ if (document.getElementById('addProjectBtn')) {
         addProjectForm.reset();
     });
     
-    // Add material to project
-    document.getElementById('addMaterialToProject')?.addEventListener('click', function() {
-        alert('เพิ่มวัสดุเข้าโครงการ (ฟีเจอร์นี้จะเชื่อมต่อกับระบบ inventory)');
-    });
+    // Add material button is handled in projects.js for full functionality
+    // (placeholder removed)
 }
 
 // ===== Customers Page =====
