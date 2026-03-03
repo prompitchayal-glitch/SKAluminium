@@ -41,7 +41,7 @@ const InventoryPage = {
         }
 
         tbody.innerHTML = items.map(item => {
-            const isLow = item.quantity <= item.minimumThreshold;
+            const isLow = item.quantity < 5; // เปลี่ยนเงื่อนไขจาก minimumThreshold เป็นค่าคงที่ 5
             const typeLabel = item.type === 'NEW' ? 'วัสดุใหม่' : 'เศษวัสดุ';
             const typeBadge = item.type === 'NEW' ? 'badge-new' : 'badge-scrap';
             
@@ -108,7 +108,7 @@ const InventoryPage = {
     // Update stats cards
     updateStats() {
         const totalItems = this.items.length;
-        const lowStock = this.items.filter(i => i.quantity <= (i.minimumThreshold || 10)).length;
+        const lowStock = this.items.filter(i => i.quantity < 5).length; // เปลี่ยนเงื่อนไขจาก minimumThreshold เป็นค่าคงที่ 5
         const normalStock = totalItems - lowStock;
 
         const statCards = document.querySelectorAll('.stat-card .stat-info h3');
@@ -154,7 +154,7 @@ const InventoryPage = {
     async addMaterial() {
         const formData = {
             name: document.getElementById('materialName').value,
-            specification: document.getElementById('materialSpecification').value,
+            specification: document.getElementById('materialSpecification').value || '-', // ตรวจสอบให้แน่ใจว่าค่าถูกดึงมาเก็บในตัวแปร specification
             type: document.getElementById('materialType').value,
             quantity: parseInt(document.getElementById('materialQuantity').value) || 0,
             unit: document.getElementById('materialUnit').value || 'ชิ้น',
@@ -313,7 +313,7 @@ const InventoryPage = {
             const matchSearch = item.name.toLowerCase().includes(search) ||
                                 (item.specification || '').toLowerCase().includes(search);
             const matchType = type === 'all' || item.type === type;
-            const isLow = item.quantity <= (item.minimumThreshold || 10);
+            const isLow = item.quantity < 5; // เปลี่ยนเงื่อนไขจาก minimumThreshold เป็นค่าคงที่ 5
             const matchStock = stock === 'all' || 
                 (stock === 'low' && isLow) || 
                 (stock === 'normal' && !isLow);
